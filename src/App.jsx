@@ -10,65 +10,87 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Switch,
+  FormControlLabel,
+  CssBaseline,
+  Box,
 } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const App = () => {
   const [open, setOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const handleThemeChange = () => setDarkMode(!darkMode);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  // Створення теми
+  const theme = createTheme({
+    palette: {
+      mode: darkMode ? "dark" : "light",
+      primary: {
+        main: darkMode ? "#90caf9" : "#1976d2",
+      },
+    },
+  });
 
   return (
-    <div>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            News
+    <ThemeProvider theme={theme}>
+      <CssBaseline /> {/* Нормалізація стилів */}
+      <div>
+        <AppBar position="static">
+          <Toolbar>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              My app
+            </Typography>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={darkMode}
+                  onChange={handleThemeChange}
+                  color="default"
+                />
+              }
+              label={darkMode ? "Dark theme" : "Light theme"}
+              sx={{ color: "inherit" }}
+            />
+          </Toolbar>
+        </AppBar>
+
+        <Container maxWidth="md" sx={{ mt: 4 }}>
+          <Typography variant="h4" gutterBottom>
+            Welcome to the app!
           </Typography>
-        </Toolbar>
-      </AppBar>
+          <Typography paragraph>
+            This is a demo app with a theme switcher.
+          </Typography>
 
-      <Container maxWidth="md" sx={{ mt: 4 }}>
-        <Typography variant="h4" gutterBottom>
-          Welcome to the app!
-        </Typography>
-        <Typography paragraph>
-          This demo app is created using Material UI.
-        </Typography>
-
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleOpen}
-          sx={{ mt: 2 }}
-        >
-          Open dialog
-        </Button>
-      </Container>
-
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Information window</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            his is an example of a dialog box in Material UI. You can add any
-            information or forms here.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Close
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleOpen}
+            sx={{ mt: 2 }}
+          >
+            Open dialog
           </Button>
-          <Button onClick={handleClose} color="primary" autoFocus>
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+        </Container>
+
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Information window</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Current theme: {darkMode ? "Dark" : "Light"}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    </ThemeProvider>
   );
 };
 
